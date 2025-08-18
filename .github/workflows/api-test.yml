@@ -21,10 +21,34 @@ jobs:
       - name: Create Laravel .env file 🔧
         env:
           APP_KEY: ${{ secrets.APP_KEY }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          APP_VERSION: ${{ secrets.APP_VERSION }}
+          APP_ENV: ${{ secrets.APP_ENV }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          APP_DEBUG: ${{ secrets.APP_DEBUG }}
+          APP_URL: ${{ secrets.APP_URL }}
+          APP_TIMEZONE: ${{ secrets.APP_TIMEZONE }}
+          LOG_CHANNEL: ${{ secrets.LOG_CHANNEL }}
+          LOG_DEPRECATIONS_CHANNEL: ${{ secrets.LOG_DEPRECATIONS_CHANNEL }}
+          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
+          DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          BROADCAST_DRIVER: ${{ secrets.BROADCAST_DRIVER }}
+          CACHE_DRIVER: ${{ secrets.CACHE_DRIVER }}
+          FILESYSTEM_DISK: ${{ secrets.FILESYSTEM_DISK }}
+          QUEUE_CONNECTION: ${{ secrets.QUEUE_CONNECTION }}
+          SESSION_DRIVER: ${{ secrets.SESSION_DRIVER }}
+          SESSION_LIFETIME: ${{ secrets.SESSION_LIFETIME }}
+          MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
+          MAIL_HOST: ${{ secrets.MAIL_HOST }}
+          MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+
         run: |
           echo "🔧 Creating Laravel .env file from .env.ci template..."
           # envsubst will read the .env.ci file, find the $VAR variables, and replace them with the values from secrets
