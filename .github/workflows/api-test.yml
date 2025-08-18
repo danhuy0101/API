@@ -29,14 +29,14 @@ jobs:
           echo "🔧 Creating Laravel .env file from .env.ci template..."
           # envsubst will read the .env.ci file, find the $VAR variables, and replace them with the values from secrets
           envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
-          echo "✅ .env file created successfully."
+          echo " .env file created successfully."
 
       # Step 3: Start Docker Containers
-      - name: Start Docker Containers 🐳
+      - name: Start Docker Containers
         run: docker compose up -d
 
       # Step 4: Wait for Services
-      - name: Wait for Services ⏳
+      - name: Wait for Services
         run: sleep 60
         shell: bash
 
@@ -56,18 +56,19 @@ jobs:
           docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
 
       # Step 6: Install Node.js & Newman
-      - name: Install Node.js & Newman ⚙️
+      - name: Install Node.js & Newman
         uses: actions/setup-node@v4
         with:
           node-version: "18"
       - run: npm install -g newman newman-reporter-htmlextra
 
       # Step 7: Run Newman Tests
-      - name: Run Newman Tests 🚀
+      - name: Run Newman Tests
+        # Newman here
         run: newman run "tests/api/test.postman_collection.json" --iteration-data "tests/api/login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
 
       # Step 8: Upload Test Report (always run)
-      - name: Upload Test Report 📊
+      - name: Upload Test Report
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -75,6 +76,6 @@ jobs:
           path: tests/api/report/detailed-result.html
 
       # Step 9: Cleanup (always run)
-      - name: Cleanup 🧹
+      - name: Cleanup
         if: always()
         run: docker compose down -v

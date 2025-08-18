@@ -25,6 +25,7 @@ if (-not (Get-Command newman -ErrorAction SilentlyContinue)) {
 
 # Run tests with enhanced reporting
 Write-Host "Running API tests with detailed reporting..."
+# Newman here
 newman run "tests/api/test.postman_collection.json" --iteration-data "tests/api/login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
 
 # Cleanup

@@ -1,76 +1,83 @@
-# BÀI TẬP: SỬ DỤNG POSTMAN, NEWMAN VÀ GITHUB ACTIONS CHO API TESTING
+# API Automation Testing with Postman, Newman, and CI/CD
 
-## Mục tiêu
+## Source Code
 
-- Làm quen với kiểm thử API bằng Postman.
-- Thực hiện kiểm thử data-driven với file CSV.
-- Tích hợp kiểm thử tự động với Newman và GitHub Actions.
+This project website with bugs source code is based on Practice Software Testing application:
+https://github.com/testsmith-io/practice-software-testing/ (Sprint 5 with bugs)
+
+## Objectives
+
+- Learn API testing with Postman
+- Implement data-driven testing using CSV files
+- Integrate automated testing with Newman and GitHub Actions
+- Set up CI/CD pipeline for automated API testing
 
 ---
 
-## 1. Cấu trúc thư mục
+## 1. Project Structure
 
 ```
 api-automation-practice/
 ├── .github/
 │   └── workflows/
-│       └── api-test.yml         # File workflow GitHub Actions
+│       └── api-test.yml         # GitHub Actions workflow file
 ├── sprint5-with-bugs/
 │   └── API/
-│       └── .env.ci              # Mẫu file môi trường cho CI
+│       └── .env.ci              # Environment template for CI
 ├── tests/
 │   └── api/
-│       ├── collection.json      # Collection Postman (bạn sẽ cập nhật)
-│       ├── environment.json     # Environment Postman
-│       └── user-accounts.csv    # File dữ liệu kiểm thử data-driven
-├── run-api-tests.sh             # Script chạy newman local
-├── run-api-tests.ps1            # Script chạy newman local (powershell)
-└── README.md                    # File hướng dẫn này
+│       ├── collection.json      # Postman collection (to be updated)
+│       ├── environment.json     # Postman environment
+│       └── user-accounts.csv    # Data-driven testing data file
+├── run-api-tests.sh             # Newman execution script (bash)
+├── run-api-tests.ps1            # Newman execution script (PowerShell)
+└── README.md                    # This documentation
 ```
 
 ---
 
-## 2. Đề bài & Yêu cầu
+## 2. Requirements & Tasks
 
-### Yêu cầu 1: Data-driven testing với Postman
+### Requirement 1: Data-driven Testing with Postman
 
-**Lưu ý quan trọng:** Trước khi bắt đầu, bạn cần khởi động ứng dụng và tạo dữ liệu:
+**Important Setup:** Before starting, you need to launch the application and create test data:
 
 ```bash
-# Khởi động các container Docker
+# Start Docker containers
 docker-compose up -d
 
-# Chờ khoảng 60 giây để các service khởi động hoàn tất
+# Wait approximately 60 seconds for services to fully start
 
-# Tạo database và dữ liệu mẫu
+# Create database and seed data
 docker compose exec laravel-api php artisan migrate:fresh --seed --force
 
-
-# Kiểm tra ứng dụng: http://localhost:8091 (API), http://localhost:8092 (UI)
+# Check application: http://localhost:8091 (API), http://localhost:8092 (UI)
 ```
 
-### 🔧 Khắc phục sự cố
+### 🔧 Troubleshooting
 
-**Nếu lệnh tạo database bị lỗi hoặc sau 60 giây mà chưa thấy thư mục `vendor` trong `sprint5-with-bugs/API/`:**
+**If database creation fails or `vendor` folder doesn't appear in `sprint5-with-bugs/API/` after 60 seconds:**
 
 ```bash
-# Cài đặt PHP dependencies (Laravel packages)
+# Install PHP dependencies (Laravel packages)
 docker compose run --rm composer
-# Chọn YES
+# Select YES
 
-# Sau đó chạy lại lệnh tạo database
+# Then run database creation again
 docker compose exec laravel-api php artisan migrate:fresh --seed --force
 ```
 
-**Các lỗi thường gặp:**
+**Common errors:**
 
-- ❌ `Class not found` → Chạy `docker compose run --rm composer`
-- ❌ `Database connection failed` → Kiểm tra file .env và chờ
+- ❌ `Class not found` → Run `docker compose run --rm composer`
+- ❌ `Database connection failed` → Check .env file and wait
 
-1. Import collection và environment có sẵn từ `tests/api` vào Postman.
-2. Tạo file `user-accounts.csv` trong `tests/api` chứa các trường: `email`, `password`, `expected_status`.
+**Steps:**
 
-   **Ví dụ mẫu tài khoản:**
+1. Import the existing collection and environment from `tests/api` into Postman.
+2. Create a `user-accounts.csv` file in `tests/api` with fields: `email`, `password`, `expected_status`.
+
+   **Sample account data:**
 
    | email                                | password  | expected_status |
    | ------------------------------------ | --------- | --------------- |
@@ -78,70 +85,75 @@ docker compose exec laravel-api php artisan migrate:fresh --seed --force
    | customer@practicesoftwaretesting.com | welcome01 | 200             |
    | invalid@practicesoftwaretesting.com  | wrongpass | 401             |
 
-3. Chỉnh sửa collection để sử dụng biến từ file CSV trong các request (ví dụ: `{{email}}`, `{{password}}`).
-4. Chạy thử collection với file CSV trên Postman bằng chức năng "Run Collection" và chọn data file.
-5. Export lại collection đã chỉnh sửa, thay thế file cũ trong `tests/api`.
+3. Modify the collection to use variables from the CSV file in requests (e.g., `{{email}}`, `{{password}}`).
+4. Test the collection with the CSV file in Postman using "Run Collection" and select the data file.
+5. Export the modified collection and replace the old file in `tests/api`.
 
 ---
 
-### Bước 2: Chạy Newman local
+### Step 2: Running Newman Locally
 
-install newman and newman-reporter-htmlextra
+**Prerequisites:** Install Newman and Newman HTML Extra reporter
 
+```bash
 npm install -g newman-reporter-htmlextra
+```
 
-**Lưu ý**: trước khi chạy nhớ đóng docker (docker compose down)
+**Note**: Before running, remember to stop Docker containers (`docker compose down`)
 
-1. Mở file `run-api-tests.sh` (hoặc `run-api-tests.ps1` - nếu bạn sử dụng PowerShell của hệ điều hành windowns) và tìm dòng có chú thích:
+1. Open the `run-api-tests.sh` file (or `run-api-tests.ps1` if using PowerShell on Windows) and find the line with comment:
+
    ```
-   # TODO (Bạn thêm code ở dưới đây)
+   # Newman here
    ```
-   Bổ sung lệnh chạy newman để thực hiện kiểm thử với collection, environment và file CSV ngay dưới dòng này.
-2. Chạy script local để kiểm tra kết quả và sinh ra báo cáo kiểm thử.
 
-   **Hướng dẫn chạy script:**
+   Add more Newman command to execute tests with collection, environment, and CSV file below this line.
 
-   Mở terminal, di chuyển đến thư mục gốc của project và chạy lệnh sau:
+2. Run the script locally to check results and generate test reports.
+
+   **Script execution guide:**
+
+   Open terminal, navigate to the project root directory, and run:
 
    ```bash
    chmod +x run-api-tests.sh
    ./run-api-tests.sh
    ```
 
-   Nếu gặp lỗi "Permission denied", bạn cần cấp quyền thực thi cho script bằng lệnh `chmod +x run-api-tests.sh` trước khi chạy.
+   If you get "Permission denied" error, grant execution permission with `chmod +x run-api-tests.sh` before running.
 
-   Sau khi chạy xong, kiểm tra kết quả kiểm thử và báo cáo được sinh ra trong thư mục hiện tại (hoặc theo đường dẫn được script chỉ định).
+   After execution, check the test results and generated reports in the current directory (or path specified by the script).
 
    ***
 
-   ✅ **Cách chạy PowerShell script trên Windows:**
+   ✅ **Running PowerShell script on Windows:**
 
-   1. Lưu file script với tên `run-api-tests.ps1`.
-   2. Mở PowerShell với quyền admin (nếu cần).
-   3. Nếu bị chặn khi chạy script, cho phép thực thi bằng lệnh:
+   1. Save the script as `run-api-tests.ps1`.
+   2. Open PowerShell as administrator (if needed).
+   3. If script execution is blocked, allow it with:
 
       ```powershell
       Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
       ```
 
-   4. Chạy script:
+   4. Run the script:
 
       ```powershell
       .\run-api-tests.ps1
       ```
 
-   Sau khi chạy xong, kiểm tra kết quả kiểm thử và báo cáo được sinh ra trong thư mục hiện tại (hoặc theo đường dẫn được script chỉ định).
+   After execution, check the test results and generated reports in the current directory (or path specified by the script).
 
 ---
 
-### Yêu cầu 3: Tích hợp GitHub Actions
+### Requirement 3: GitHub Actions Integration
 
-1. **Tạo repository mới trên GitHub** và push toàn bộ code của bạn lên repository này.
+1. **Create a new GitHub repository** and push all your code to this repository.
 
-2. **Thiết lập các secrets cần thiết trên GitHub repository.**
+2. **Set up required secrets on the GitHub repository.**
 
-   > **Lưu ý:** Các secrets này chính là các giá trị tương ứng trong file `.env` của thư mục `API`.  
-   > Ví dụ, nếu file `.env` có các dòng:
+   > **Note:** These secrets correspond to values in the `ci.env` file in the `API` directory.  
+   > For example, if the `ci.env` file contains:
    >
    > ```
    > APP_KEY=base64:xxxxxxx
@@ -151,7 +163,7 @@ npm install -g newman-reporter-htmlextra
    > JWT_SECRET=your-jwt-secret
    > ```
    >
-   > Thì bạn cần tạo các secrets trên GitHub với tên và giá trị tương ứng:
+   > You need to create GitHub secrets with corresponding names and values:
    >
    > - `APP_KEY`
    > - `DB_DATABASE`
@@ -159,27 +171,30 @@ npm install -g newman-reporter-htmlextra
    > - `DB_PASSWORD`
    > - `JWT_SECRET`
 
-3. **Mở file workflow [`api-test.yml`](.github/workflows/api-test.yml)** và tìm bước có chú thích:
+3. **Open the workflow file [`api-test.yml`](.github/workflows/api-test.yml)** and find the step with comment:
 
    ```yaml
-   # TODO (Bạn thêm code ở dưới đây)
+   # Newman here
    ```
 
-   Thêm lệnh chạy Newman vào vị trí này để thực hiện kiểm thử tự động.
+   Add more Newman execution command at this location if needed to perform automated testing.
 
-4. **Đảm bảo workflow có bước upload báo cáo kiểm thử lên mục Artifacts** để lưu trữ và tải về sau khi kiểm thử hoàn thành.
+4. **Ensure the workflow includes a step to upload test reports to Artifacts** for storage and download after testing completion.
 
-5. **Push code lên GitHub và kiểm tra quá trình chạy trên GitHub Actions.**  
-   Sau khi workflow hoàn thành, tải về file báo cáo kiểm thử từ mục Artifacts để xem kết quả.
-
----
-
-## 3. Kết quả mong đợi
-
-- Collection chạy được với data từ file CSV trên cả Postman và Newman.
-- Báo cáo kiểm thử được sinh ra và upload thành công lên GitHub Actions.
-- Toàn bộ quá trình kiểm thử tự động hóa được thực hiện qua CI/CD.
+5. **Push code to GitHub and monitor the GitHub Actions execution.**  
+   After workflow completion, download the test report from Artifacts to view results.
 
 ---
 
-**Chúc các bạn hoàn thành tốt bài tập!**
+## 3. Expected Results
+
+- Collection runs successfully with CSV data on both Postman and Newman
+- Test reports are generated and uploaded successfully to GitHub Actions
+- Complete automated testing process is implemented through CI/CD pipeline
+
+---
+
+## 4. References
+
+- Main Application: https://github.com/testsmith-io/practice-software-testing/
+- Group Seminar Reference: https://github.com/KRaito903/api-automation-practice
