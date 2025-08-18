@@ -17,43 +17,45 @@ jobs:
       - name: Checkout Code ⚙️
         uses: actions/checkout@v4
 
-      # Step 2: Create .env file from template and secrets
+      # Step 2: Create .env file with hardcoded values
       - name: Create Laravel .env file 🔧
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }}
-          APP_NAME: ${{ secrets.APP_NAME }}
-          APP_VERSION: ${{ secrets.APP_VERSION }}
-          APP_ENV: ${{ secrets.APP_ENV }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          APP_DEBUG: ${{ secrets.APP_DEBUG }}
-          APP_URL: ${{ secrets.APP_URL }}
-          APP_TIMEZONE: ${{ secrets.APP_TIMEZONE }}
-          LOG_CHANNEL: ${{ secrets.LOG_CHANNEL }}
-          LOG_DEPRECATIONS_CHANNEL: ${{ secrets.LOG_DEPRECATIONS_CHANNEL }}
-          LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
-          DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_DATABASE: ${{ secrets.DB_DATABASE }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          BROADCAST_DRIVER: ${{ secrets.BROADCAST_DRIVER }}
-          CACHE_DRIVER: ${{ secrets.CACHE_DRIVER }}
-          FILESYSTEM_DISK: ${{ secrets.FILESYSTEM_DISK }}
-          QUEUE_CONNECTION: ${{ secrets.QUEUE_CONNECTION }}
-          SESSION_DRIVER: ${{ secrets.SESSION_DRIVER }}
-          SESSION_LIFETIME: ${{ secrets.SESSION_LIFETIME }}
-          MAIL_MAILER: ${{ secrets.MAIL_MAILER }}
-          MAIL_HOST: ${{ secrets.MAIL_HOST }}
-          MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-
         run: |
-          echo "🔧 Creating Laravel .env file from .env.ci template..."
-          # envsubst will read the .env.ci file, find the $VAR variables, and replace them with the values from secrets
-          envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
-          echo " .env file created successfully."
+          echo "🔧 Creating Laravel .env file..."
+          cat > sprint5-with-bugs/API/.env << 'EOF'
+          APP_NAME=Toolshop
+          APP_VERSION=5
+          APP_ENV=local
+          APP_KEY=base64:hJawExRAnwWOUI0a/YBWH+yRHJWCKYpwItOUFQdcFo4=
+          JWT_SECRET=XVVuj9s7byIX8XPNWt0aYOsFjmc4JZQmE2wR7h9IJXoEOWXwk6o6wM8AKUL7jUTy
+          APP_DEBUG=true
+          APP_URL=http://localhost:8091
+          APP_TIMEZONE=Europe/Amsterdam
+
+          LOG_CHANNEL=stack
+          LOG_DEPRECATIONS_CHANNEL=null
+          LOG_LEVEL=debug
+
+          DB_CONNECTION=mysql
+          DB_HOST=127.0.0.1
+          DB_PORT=3306
+          DB_DATABASE=toolshop
+          DB_USERNAME=root
+          DB_PASSWORD=root
+
+          BROADCAST_DRIVER=log
+          CACHE_DRIVER=file
+          FILESYSTEM_DISK=local
+          QUEUE_CONNECTION=database
+          SESSION_DRIVER=file
+          SESSION_LIFETIME=120
+
+          MAIL_MAILER=smtp
+          MAIL_HOST=mailcatcher
+          MAIL_PORT=1025
+          MAIL_USERNAME=null
+          MAIL_PASSWORD=null
+          EOF
+          echo "✅ .env file created successfully."
 
       # Step 3: Start Docker Containers
       - name: Start Docker Containers
