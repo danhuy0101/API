@@ -1,0 +1,80 @@
+# Name of the process
+name: Laravel CI/CD with Newman Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout code from repository
+      - name: Checkout Code ⚙️
+        uses: actions/checkout@v4
+
+      # Step 2: Create .env file from template and secrets
+      - name: Create Laravel .env file 🔧
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          echo "🔧 Creating Laravel .env file from .env.ci template..."
+          # envsubst will read the .env.ci file, find the $VAR variables, and replace them with the values from secrets
+          envsubst < sprint5-with-bugs/API/.env.ci > sprint5-with-bugs/API/.env
+          echo "✅ .env file created successfully."
+
+      # Step 3: Start Docker Containers
+      - name: Start Docker Containers 🐳
+        run: docker compose up -d
+
+      # Step 4: Wait for Services
+      - name: Wait for Services ⏳
+        run: sleep 60
+        shell: bash
+
+      # Step 5: Setup Application
+      - name: Setup Application 🔧
+        run: |
+          echo " Installing Composer dependencies..."
+          # Using the 'composer' service defined in docker-compose.yml
+          docker compose run --rm composer
+
+          echo " Fixing permissions..."
+          # Grant access permissions for the storage and cache directories
+          docker compose exec -T -u root laravel-api chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+          echo " Running database migrations and seeding..."
+          # Run migrate & seed
+          docker compose exec -T laravel-api php artisan migrate:fresh --seed --force
+
+      # Step 6: Install Node.js & Newman
+      - name: Install Node.js & Newman ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - run: npm install -g newman newman-reporter-htmlextra
+
+      # Step 7: Run Newman Tests
+      - name: Run Newman Tests 🚀
+        run: newman run "tests/api/test.postman_collection.json" --iteration-data "tests/api/login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
+
+      # Step 8: Upload Test Report (always run)
+      - name: Upload Test Report 📊
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-report
+          path: tests/api/report/detailed-result.html
+
+      # Step 9: Cleanup (always run)
+      - name: Cleanup 🧹
+        if: always()
+        run: docker compose down -v
