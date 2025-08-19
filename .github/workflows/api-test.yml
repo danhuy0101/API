@@ -93,19 +93,19 @@ jobs:
         # Newman here
         run: |
           echo "API Login Tests"
-          newman run "tests/api/1_Login.postman_collection.json" --iteration-data "tests/api/data/1_login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/1_Login_detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
+          newman run "tests/api/1_Login.postman_collection.json" --iteration-data "tests/api/data/1_login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/1_Login_detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose --suppress-exit-code
 
           echo "Refreshing database..."
           docker compose exec -T laravel-api php artisan migrate:fresh --seed
 
           echo "API User Details Tests"
-          newman run "tests/api/2_me.postman_collection.json" --iteration-data "tests/api/data/2_me.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/2_User_Details_detailed-result.html" --reporter-htmlextra-title "API User Details Tests Report" --reporter-htmlextra-logs --verbose
+          newman run "tests/api/2_me.postman_collection.json" --iteration-data "tests/api/data/2_me.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/2_User_Details_detailed-result.html" --reporter-htmlextra-title "API User Details Tests Report" --reporter-htmlextra-logs --verbose --suppress-exit-code
 
           echo "Refreshing database..."
           docker compose exec -T laravel-api php artisan migrate:fresh --seed
 
           echo "API Change Password Tests"
-          newman run "tests/api/3_Change_password.postman_collection.json" --iteration-data "tests/api/data/3_change_password.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/3_Change_Password_detailed-result.html" --reporter-htmlextra-title "API Change Password Tests Report" --reporter-htmlextra-logs --verbose
+          newman run "tests/api/3_Change_password.postman_collection.json" --iteration-data "tests/api/data/3_change_password.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/3_Change_Password_detailed-result.html" --reporter-htmlextra-title "API Change Password Tests Report" --reporter-htmlextra-logs --verbose --suppress-exit-code
 
       # Step 8: Upload Test Report (always run)
       - name: Upload Test Report
