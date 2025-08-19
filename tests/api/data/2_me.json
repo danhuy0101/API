@@ -1,0 +1,42 @@
+[
+  {
+    "testCaseId": "TC001",
+    "email": "customer@practicesoftwaretesting.com",
+    "password": "",
+    "type": "invalid",
+    "description": "TC001 - Invalid token",
+    "expectedResult": "Get user details fails with 401 Unauthorized"
+  },
+  {
+    "testCaseId": "TC002",
+    "email": "admin@practicesoftwaretesting.com",
+    "password": "welcome01",
+    "type": "valid",
+    "description": "TC002 - Valid admin login with correct credentials",
+    "expectedResult": "Successful get user details"
+  },
+  {
+    "testCaseId": "TC003",
+    "email": "customer@practicesoftwaretesting.com",
+    "password": "welcome01",
+    "type": "valid",
+    "description": "TC003 - Valid customer login with correct credentials",
+    "expectedResult": "Successful get user details"
+  },
+  {
+    "testCaseId": "TC004",
+    "email": "     customer2@practicesoftwaretesting.com     ",
+    "password": "welcome01",
+    "type": "valid",
+    "description": "TC004 - Valid login with email containing leading/trailing spaces",
+    "expectedResult": "Successful login after email trimming"
+  },
+  {
+    "testCaseId": "TC005",
+    "email": "customer2@practicesoftwaretesting.com",
+    "password": "welcome01",
+    "type": "valid",
+    "description": "TC005 - Valid customer2 login with correct credentials",
+    "expectedResult": "Successful get user details"
+  }
+]

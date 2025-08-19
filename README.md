@@ -26,9 +26,11 @@ api-automation-practice/
 │       └── .env.ci              # Environment template for CI
 ├── tests/
 │   └── api/
-│       ├── collection.json      # Postman collection (to be updated)
-│       ├── environment.json     # Postman environment
-│       └── user-accounts.csv    # Data-driven testing data file
+│       ├── 1_Login.postman_collection.json      # Login API testing collection
+│       ├── 2_Me.postman_collection.json         # User profile API testing collection
+│       ├── 3_Change_password.postman_collection.json # Password change API testing collection
+│       ├── login.json           # Postman environment
+│       └── data/                # Data-driven testing data files
 ├── run-api-tests.sh             # Newman execution script (bash)
 ├── run-api-tests.ps1            # Newman execution script (PowerShell)
 └── README.md                    # This documentation
@@ -74,10 +76,16 @@ docker compose exec laravel-api php artisan migrate:fresh --seed --force
 
 **Steps:**
 
-1. Import the existing collection and environment from `tests/api` into Postman.
-2. Create a `user-accounts.csv` file in `tests/api` with fields: `email`, `password`, `expected_status`.
+1. Import the existing collections and environment from `tests/api` into Postman:
 
-   **Sample account data:**
+   - `1_Login.postman_collection.json` - Tests user authentication endpoints
+   - `2_Me.postman_collection.json` - Tests user profile management endpoints
+   - `3_Change_password.postman_collection.json` - Tests password change functionality
+   - `login.json` - Environment configuration
+
+2. Create data files in `tests/api/data/` directory for each collection as needed.
+
+   **Sample account data for login testing:**
 
    | email                                | password  | expected_status |
    | ------------------------------------ | --------- | --------------- |
@@ -85,9 +93,9 @@ docker compose exec laravel-api php artisan migrate:fresh --seed --force
    | customer@practicesoftwaretesting.com | welcome01 | 200             |
    | invalid@practicesoftwaretesting.com  | wrongpass | 401             |
 
-3. Modify the collection to use variables from the CSV file in requests (e.g., `{{email}}`, `{{password}}`).
-4. Test the collection with the CSV file in Postman using "Run Collection" and select the data file.
-5. Export the modified collection and replace the old file in `tests/api`.
+3. Modify the collections to use variables from the data files in requests (e.g., `{{email}}`, `{{password}}`).
+4. Test each collection individually with the corresponding data files in Postman using "Run Collection" and select the appropriate data file.
+5. Export the modified collections and replace the old files in `tests/api` if needed.
 
 ---
 
@@ -107,7 +115,11 @@ npm install -g newman-reporter-htmlextra
    # Newman here
    ```
 
-   Add more Newman command to execute tests with collection, environment, and CSV file below this line.
+   Add Newman commands to execute all three test collections with environment and data files below this line:
+
+   - Login API tests (`1_Login.postman_collection.json`)
+   - User profile API tests (`2_Me.postman_collection.json`)
+   - Password change API tests (`3_Change_password.postman_collection.json`)
 
 2. Run the script locally to check results and generate test reports.
 
@@ -177,7 +189,11 @@ npm install -g newman-reporter-htmlextra
    # Newman here
    ```
 
-   Add more Newman execution command at this location if needed to perform automated testing.
+   Add Newman execution commands for all three collections at this location to perform automated testing:
+
+   - Login API tests
+   - User profile API tests
+   - Password change API tests
 
 4. **Ensure the workflow includes a step to upload test reports to Artifacts** for storage and download after testing completion.
 
@@ -188,9 +204,10 @@ npm install -g newman-reporter-htmlextra
 
 ## 3. Expected Results
 
-- Collection runs successfully with CSV data on both Postman and Newman
+- All three collections (Login, Me, Change Password) run successfully with their respective data files on both Postman and Newman
+- Individual test reports are generated for each collection
 - Test reports are generated and uploaded successfully to GitHub Actions
-- Complete automated testing process is implemented through CI/CD pipeline
+- Complete automated testing process is implemented through CI/CD pipeline covering login, user profile, and password management functionality
 
 ---
 
