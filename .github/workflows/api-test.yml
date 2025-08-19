@@ -107,13 +107,13 @@ jobs:
           echo "API Change Password Tests"
           newman run "tests/api/3_Change_password.postman_collection.json" --iteration-data "tests/api/data/3_change_password.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/3_Change_Password_detailed-result.html" --reporter-htmlextra-title "API Change Password Tests Report" --reporter-htmlextra-logs --verbose --suppress-exit-code
 
-      # Step 8: Upload Test Report (always run)
-      - name: Upload Test Report
+      # Step 8: Upload Test Reports (always run)
+      - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: newman-report
-          path: tests/api/report/detailed-result.html
+          name: newman-reports
+          path: tests/api/report/*.html
 
       # Step 9: Cleanup (always run)
       - name: Cleanup
