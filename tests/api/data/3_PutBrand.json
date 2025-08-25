@@ -1,0 +1,68 @@
+[
+  {
+    "brandId": 1,
+    "name": "Updated Brand",
+    "slug": "updated-brand",
+    "expected_status": 200
+  },
+  {
+    "brandId": 9999,
+    "name": "Not Exist",
+    "slug": "not-exist",
+    "expected_status": 404
+  },
+  {
+    "brandId": "abc",
+    "name": "Wrong Type",
+    "slug": "wrong-type",
+    "expected_status": 422
+  },
+  {
+    "brandId": 1,
+    "name": "",
+    "slug": "invalid-slug",
+    "expected_status": 422
+  },
+  {
+    "brandId": -1,
+    "name": "Test405",
+    "slug": "test405",
+    "expected_status": 404
+  }, 
+  {
+    "brandId": 1,
+    "name": "Victor",
+    "slug": "",
+    "expected_status": 422
+  }, 
+  {
+    "brandId": 1,
+    "name": "Duplicate Slug Brand Name 2",
+    "slug": "brand-name-2",
+    "expected_status": 422
+  },
+  {
+    "brandId": 0,
+    "name": "Zero ID",
+    "slug": "zero-id",
+    "expected_status": 404
+  }, 
+  {
+    "brandId": "",
+    "name": "Empty ID",
+    "slug": "brand-name-1",
+    "expected_status": 422
+  }, 
+  {
+    "brandId": "1",
+    "name": "",
+    "slug": "",
+    "expected_status": 422
+  }, 
+  {
+    "brandId": 12345678901233555555555,
+    "name": "ID too long",
+    "slug": "ID too long",
+    "expected_status": 422
+  }
+]

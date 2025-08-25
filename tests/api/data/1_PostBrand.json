@@ -1,0 +1,14 @@
+[
+  { "name": "Nike", "slug": "nike", "expected_status": 201, "description": "Thêm brand hợp lệ" },
+  { "name": "Adidas", "slug": "adidas", "expected_status": 201, "description": "Thêm brand hợp lệ khác" },
+  { "name": "Puma", "slug": "puma", "expected_status": 201, "description": "Thêm brand hợp lệ khác" },
+  { "name": "", "slug": "", "expected_status": 422, "description": "Thiếu name và slug" },
+  { "name": "", "slug": "missing-slug", "expected_status": 422, "description": "Thiếu name" },
+  { "name": "OnlyName", "slug": "", "expected_status": 422, "description": "Thiếu slug" },
+  { "name": "123Brand", "slug": "123brand", "expected_status": 201, "description": "Brand hợp lệ với số" },
+  { "name": "@@@", "slug": "victor", "expected_status": 422, "description": "Tên chứa ký tự không hợp lệ" },
+  { "name": "Yonex", "slug": "@@@", "expected_status": 422, "description": "slug chứa ký tự không hợp lệ" },
+  { "name": "Bánh kem", "slug": "Cake", "expected_status": 201, "description": "Tên có dấu" },
+  { "name": "Car", "slug": "Xe hơi", "expected_status": 201, "description": "slug có dấu" },
+  { "name": "Nguyễn Văn 😊", "slug": "brand-moi", "expected_status": 422, "description": "Tên có chứa emoji" }
+]

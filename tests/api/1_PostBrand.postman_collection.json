@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "4dd840ce-9fab-45a2-9eca-1038448bced6",
+		"name": "1_Postpro",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40252150"
+	},
+	"item": [
+		{
+    "name": "POST Brand - Data Driven",
+    "event": [
+			{
+				"listen": "prerequest",
+				"script": {
+					"exec": [
+						"let slugFromData = pm.iterationData.get('slug');",
+						"let randomNumber = Math.floor(Math.random() * 1000000);",
+						"",
+						"if (slugFromData && slugFromData.trim() !== '') {",
+						"    // Có slug trong data thì nối thêm số random",
+						"    let newSlug = slugFromData + '-' + randomNumber;",
+						"    pm.variables.set('slug', newSlug);",
+						"    console.log('Slug from data + random:', newSlug);",
+						"} else {",
+						"    // Nếu slug rỗng thì giữ nguyên (không set gì cả, vẫn để trống)",
+						"    pm.variables.set('slug', '');",
+						"    console.log('Slug is empty, keep empty');",
+						"}"
+					],
+					"type": "text/javascript"
+				}
+			},
+      {
+        "listen": "test",
+        "script": {
+          "exec": [
+            "// Kiểm tra status code động theo dữ liệu test",
+            "var expectedStatus = pm.iterationData.get('expected_status');",
+            "pm.test('Status code is ' + expectedStatus, function () {",
+            "    pm.expect(pm.response.code).to.eql(parseInt(expectedStatus));",
+            "});",
+            "",
+            "// Nếu thành công (201), kiểm tra response trả về id, name, slug",
+            "if (pm.response.code === 201) {",
+            "    var jsonData = pm.response.json();",
+            "    pm.expect(jsonData).to.have.property('id');",
+            "    pm.expect(jsonData.name).to.eql(pm.iterationData.get('name'));",
+            "    // So sánh với slug thực tế đã gửi",
+            "    pm.expect(jsonData.slug).to.eql(pm.variables.get('slug'));",
+            "}",
+            "",
+            "// Nếu thất bại (404 hoặc 405), kiểm tra message",
+            "if (pm.response.code === 404 || pm.response.code === 405) {",
+            "    var error = pm.response.json();",
+            "    pm.expect(error).to.have.property('message');",
+            "}"
+          ],
+          "type": "text/javascript"
+        }
+      }
+    ],
+    "request": {
+      "method": "POST",
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mode": "raw",
+        "raw": "{\n  \"name\": \"{{name}}\",\n  \"slug\": \"{{slug}}\"\n}"
+      },
+      "url": {
+        "raw": "{{base_url}}/brands",
+        "host": ["{{base_url}}"],
+        "path": ["brands"]
+      }
+    }
+  }
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8091",
+			"type": "string"
+		}
+	]
+}

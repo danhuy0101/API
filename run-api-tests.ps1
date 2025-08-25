@@ -26,20 +26,20 @@ if (-not (Get-Command newman -ErrorAction SilentlyContinue)) {
 # Run tests with enhanced reporting
 Write-Host "Running API tests with detailed reporting..."
 # Newman here
-Write-Host "API Login Tests"
-newman run "tests/api/1_Login.postman_collection.json" --iteration-data "tests/api/data/1_login.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/1_Login_detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
+Write-Host "API Post Brand Tests"
+newman run "tests/api/1_PostBrand.postman_collection.json" --iteration-data "tests/api/data/1_PostBrand.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/1_Login_detailed-result.html" --reporter-htmlextra-title "API Login Tests Report" --reporter-htmlextra-logs --verbose
 
 Write-Host "Refreshing database..."
 docker compose exec laravel-api php artisan migrate:fresh --seed
 
-Write-Host "API User Details Tests"
-newman run "tests/api/2_me.postman_collection.json" --iteration-data "tests/api/data/2_me.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/2_User_Details_detailed-result.html" --reporter-htmlextra-title "API User Details Tests Report" --reporter-htmlextra-logs --verbose
+Write-Host "API Get Brand Tests"
+newman run "tests/api/2_GetBrand.postman_collection.json" --iteration-data "tests/api/data/2_GetBrand.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/2_User_Details_detailed-result.html" --reporter-htmlextra-title "API User Details Tests Report" --reporter-htmlextra-logs --verbose
 
 Write-Host "Refreshing database..."
 docker compose exec laravel-api php artisan migrate:fresh --seed
 
-Write-Host "API Change Password Tests"
-newman run "tests/api/3_Change_password.postman_collection.json" --iteration-data "tests/api/data/3_change_password.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/3_Change_Password_detailed-result.html" --reporter-htmlextra-title "API Change Password Tests Report" --reporter-htmlextra-logs --verbose
+Write-Host "API Put Brand Tests"
+newman run "tests/api/3_PutBrand.postman_collection.json" --iteration-data "tests/api/data/3_PutBrand.json" --reporters "cli,htmlextra" --reporter-htmlextra-export "tests/api/report/3_Put_Brand_detailed-result.html" --reporter-htmlextra-title "API Put Brand Tests Report" --reporter-htmlextra-logs --verbose
 
 # Cleanup
 Write-Host " Stopping Docker containers..."

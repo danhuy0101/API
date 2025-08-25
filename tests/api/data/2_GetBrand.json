@@ -1,0 +1,11 @@
+[
+  { "brandId": 1, "expected_status": 200, "description": "Brand tồn tại trong DB" },
+  { "brandId": 2, "expected_status": 200, "description": "Brand khác cũng tồn tại" },
+  { "brandId": 9999, "expected_status": 404, "description": "Brand không tồn tại" },
+  { "brandId": "abc", "expected_status": 404, "description": "Truyền chữ thay vì số" },
+  { "brandId": -1, "expected_status": 404, "description": "ID âm không hợp lệ" },
+  { "brandId": 0, "expected_status": 404, "description": "ID = 0 (có thể không tồn tại)" },
+  { "brandId": "", "expected_status": 404, "description": "ID rỗng" }, 
+  {"brandId": 12334543665476758769, "expected_status": 404, "description": "ID very long" },
+  { "brandId": 1.5, "expected_status": 404, "description": "ID là số thập phân"}
+]

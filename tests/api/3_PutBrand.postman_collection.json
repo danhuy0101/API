@@ -1,0 +1,95 @@
+{
+  "info": {
+    "_postman_id": "c18a2a4f-81cd-4e1f-9012-02baf5f82a23",
+    "name": "2_PutBrand",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PUT Brand - Data Driven",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Lấy expected status từ file CSV/JSON",
+              "var expectedStatus = pm.iterationData.get('expected_status');",
+              "pm.test('Status code is ' + expectedStatus, function () {",
+              "    pm.expect(pm.response.code).to.eql(parseInt(expectedStatus));",
+              "});",
+              "",
+              "var jsonData = {};",
+              "try { jsonData = pm.response.json(); } catch(e) {}",
+              "",
+              "// 200: thành công",
+              "if (pm.response.code === 200) {",
+              "    pm.test('Response has success = true', function () {",
+              "        pm.expect(jsonData).to.have.property('success', true);",
+              "    });",
+              "}",
+              "",
+              "// 404: không tìm thấy",
+              "if (pm.response.code === 404) {",
+              "    pm.test('Response has not found message', function () {",
+              "        pm.expect(jsonData).to.have.property('message');",
+              "        pm.expect(jsonData.message).to.eql('Requested item not found');",
+              "    });",
+              "}",
+              "",
+              "// 405: method không cho phép",
+              "if (pm.response.code === 405) {",
+              "    pm.test('Response has method not allowed message', function () {",
+              "        pm.expect(jsonData).to.have.property('message');",
+              "        pm.expect(jsonData.message).to.eql('Method is not allowed for the requested route');",
+              "    });",
+              "}",
+              "",
+              "// 422: dữ liệu không hợp lệ",
+              "// 422: dữ liệu không hợp lệ",
+              "if (pm.response.code === 422) {",
+              "    var error = pm.response.json();",
+              "    pm.test('Response has validation error info', function () {",
+              "        pm.expect(error).to.be.an('object');",
+              "        // Kiểm tra có ít nhất một field lỗi",
+              "        pm.expect(Object.keys(error).length).to.be.greaterThan(0);",
+              "    });",
+              "    // Nếu muốn test cụ thể cho slug",
+              "    if (error.slug) {",
+              "        pm.test('Slug validation error exists', function () {",
+              "            pm.expect(error.slug[0]).to.be.a('string');",
+              "        });",
+              "    }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"{{name}}\",\n  \"slug\": \"{{slug}}\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/brands/{{brandId}}",
+          "host": ["{{base_url}}"],
+          "path": ["brands", "{{brandId}}"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8091",
+      "type": "string"
+    }
+  ]
+}

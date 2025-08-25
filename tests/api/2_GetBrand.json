@@ -1,0 +1,83 @@
+{
+  "info": {
+    "_postman_id": "abcd1234-5678-efgh-ijkl-9876543210",
+    "name": "Brands API - Data Driven",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Brand by ID - Data Driven",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Lấy expected status từ file data",
+              "var expectedStatus = parseInt(pm.iterationData.get('expected_status'));",
+              "",
+              "pm.test('Status code is ' + expectedStatus, function () {",
+              "    pm.expect(pm.response.code).to.eql(expectedStatus);",
+              "});",
+              "",
+              "// Thử parse JSON (nếu không phải JSON thì bỏ qua)",
+              "let responseText = pm.response.text();",
+              "let jsonData = null;",
+              "try {",
+              "    jsonData = pm.response.json();",
+              "} catch (e) {",
+              "    console.warn('Response is not JSON:', responseText);",
+              "}",
+              "",
+              "// Nếu 200 -> phải có id, name, slug",
+              "if (pm.response.code === 200 && jsonData) {",
+              "    pm.test('Response has id', function () {",
+              "        pm.expect(jsonData).to.have.property('id');",
+              "    });",
+              "    pm.test('Response has name', function () {",
+              "        pm.expect(jsonData).to.have.property('name');",
+              "    });",
+              "    pm.test('Response has slug', function () {",
+              "        pm.expect(jsonData).to.have.property('slug');",
+              "    });",
+              "}",
+              "",
+              "// Nếu 404 thì kiểm tra message (nếu có JSON)",
+              "if (pm.response.code === 404 && jsonData) {",
+              "    pm.test('Not found message', function () {",
+              "        pm.expect(jsonData.message).to.eql('Requested item not found');",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/brands/{{brandId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "brands",
+            "{{brandId}}"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8091",
+      "type": "string"
+    }
+  ]
+}

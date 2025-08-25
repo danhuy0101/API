@@ -48,7 +48,7 @@ services:
       context: ./_docker/cron
       dockerfile: Dockerfile
     working_dir: /var/www
-    container_name: cron
+    container_name: cron-1
     restart: always
     command: crond -f -l 8
     volumes_from:
