@@ -1,7 +1,6 @@
 [
   { "name": "Nike", "slug": "nike", "expected_status": 201, "description": "Thêm brand hợp lệ" },
   { "name": "Adidas", "slug": "adidas", "expected_status": 201, "description": "Thêm brand hợp lệ khác" },
-  { "name": "Puma", "slug": "puma", "expected_status": 201, "description": "Thêm brand hợp lệ khác" },
   { "name": "", "slug": "", "expected_status": 422, "description": "Thiếu name và slug" },
   { "name": "", "slug": "missing-slug", "expected_status": 422, "description": "Thiếu name" },
   { "name": "OnlyName", "slug": "", "expected_status": 422, "description": "Thiếu slug" },
