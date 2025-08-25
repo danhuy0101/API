@@ -1,8 +1,8 @@
 [
   {
-    "brandId": 1,
-    "name": "Updated Brand",
-    "slug": "updated-brand",
+    "brandId": 10,
+    "name": "Bosch Updated",
+    "slug": "bosch-updated",
     "expected_status": 200
   },
   {
@@ -18,27 +18,27 @@
     "expected_status": 422
   },
   {
-    "brandId": 1,
+    "brandId": 10,
     "name": "",
     "slug": "invalid-slug",
     "expected_status": 422
   },
   {
     "brandId": -1,
-    "name": "Test405",
-    "slug": "test405",
+    "name": "InvalidID",
+    "slug": "invalid-id",
     "expected_status": 404
   }, 
   {
-    "brandId": 1,
-    "name": "Victor",
+    "brandId": 10,
+    "name": "Makita",
     "slug": "",
     "expected_status": 422
   }, 
   {
-    "brandId": 1,
-    "name": "Duplicate Slug Brand Name 2",
-    "slug": "brand-name-2",
+    "brandId": 10,
+    "name": "Duplicate Slug Test",
+    "slug": "dewalt",
     "expected_status": 422
   },
   {
@@ -50,11 +50,11 @@
   {
     "brandId": "",
     "name": "Empty ID",
-    "slug": "brand-name-1",
+    "slug": "stanley",
     "expected_status": 422
   }, 
   {
-    "brandId": "1",
+    "brandId": "10",
     "name": "",
     "slug": "",
     "expected_status": 422
@@ -62,7 +62,7 @@
   {
     "brandId": 12345678901233555555555,
     "name": "ID too long",
-    "slug": "ID too long",
+    "slug": "id-too-long",
     "expected_status": 422
   }
 ]
