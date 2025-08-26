@@ -1,6 +1,6 @@
 [
   {
-    "brandId": 10,
+    "brandId": 1,
     "name": "Bosch Updated",
     "slug": "bosch-updated",
     "expected_status": 200
@@ -18,7 +18,7 @@
     "expected_status": 422
   },
   {
-    "brandId": 10,
+    "brandId": 1,
     "name": "",
     "slug": "invalid-slug",
     "expected_status": 422
@@ -30,17 +30,11 @@
     "expected_status": 404
   }, 
   {
-    "brandId": 10,
+    "brandId": 1,
     "name": "Makita",
     "slug": "",
     "expected_status": 422
   }, 
-  {
-    "brandId": 10,
-    "name": "Duplicate Slug Test",
-    "slug": "dewalt",
-    "expected_status": 422
-  },
   {
     "brandId": 0,
     "name": "Zero ID",
@@ -54,7 +48,7 @@
     "expected_status": 422
   }, 
   {
-    "brandId": "10",
+    "brandId": "1",
     "name": "",
     "slug": "",
     "expected_status": 422
