@@ -6,7 +6,7 @@
   { "name": "Stanley123", "slug": "stanley123", "expected_status": 201, "description": "Brand hợp lệ có chứa số" },
   { "name": "@@@", "slug": "dewalt", "expected_status": 422, "description": "Tên chứa ký tự không hợp lệ" },
   { "name": "Hilti", "slug": "@@@", "expected_status": 422, "description": "Slug chứa ký tự không hợp lệ" },
-  { "name": "Máy khoan Việt", "slug": "vietnam-tools", "expected_status": 201, "description": "Tên có dấu" },
+  { "name": "Ari Ánh Quê", "slug": "vietnam-tools", "expected_status": 201, "description": "Tên có dấu" },
   { "name": "Tool Việt", "slug": "dụng-cụ", "expected_status": 201, "description": "Slug có dấu" },
-  { "name": "Công ty 😊", "slug": "local-brand", "expected_status": 422, "description": "Tên có chứa emoji" }
+  { "name": "Quần Bông 😊", "slug": "local-brand", "expected_status": 422, "description": "Tên có chứa emoji" }
 ]
